@@ -367,6 +367,7 @@ static void device_added(struct udev_device *udevice)
 
 	g_io_channel_set_close_on_unref(io, TRUE);
 	g_io_channel_unref(io);
+	close(fd);
 }
 
 static gboolean monitor_watch(GIOChannel *source, GIOCondition condition,
