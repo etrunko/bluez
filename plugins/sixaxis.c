@@ -187,6 +187,7 @@ static bool setup_device(int fd, int index, struct btd_adapter *adapter)
 	bdaddr_t device_bdaddr, master_bdaddr;
 	const bdaddr_t *adapter_bdaddr;
 	struct btd_device *device;
+	int err;
 
 	if (get_device_bdaddr(fd, &device_bdaddr) < 0)
 		return false;
@@ -200,6 +201,11 @@ static bool setup_device(int fd, int index, struct btd_adapter *adapter)
 	device = btd_adapter_find_device(adapter, &device_bdaddr,
 							BDADDR_BREDR);
 	if (device && btd_device_is_connected(device))
+		return false;
+
+	info("sixaxis: request_authorization");
+	err = device_confirm_passkey(device, 0, 0);
+	if (err < 0)
 		return false;
 
 	adapter_bdaddr = btd_adapter_get_address(adapter);
